@@ -1,0 +1,512 @@
+{% extends 'base.html' %}
+{% block title %}
+    舆情分析
+{% endblock %}
+{% block main %}
+    <div class="card mb-4">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <button class="nav-link active" id="nav-home-1-tab" data-bs-toggle="tab" data-bs-target="#nav-home-1"
+                        type="button" role="tab" aria-controls="nav-home-1" aria-selected="true">成都理工大学
+                </button>
+                <button class="nav-link" id="nav-home-2-tab" data-bs-toggle="tab" data-bs-target="#nav-home-2"
+                        type="button" role="tab" aria-controls="nav-home-2" aria-selected="false">电子科技大学
+                </button>
+                <button class="nav-link" id="nav-home-3-tab" data-bs-toggle="tab" data-bs-target="#nav-home-3"
+                        type="button" role="tab" aria-controls="nav-home-3" aria-selected="false">四川大学
+                </button>
+                <button class="nav-link" id="nav-home-4-tab" data-bs-toggle="tab" data-bs-target="#nav-home-4"
+                        type="button" role="tab" aria-controls="nav-home-4" aria-selected="false">西南石油大学
+                </button>
+                <button class="nav-link" id="nav-home-5-tab" data-bs-toggle="tab" data-bs-target="#nav-home-5"
+                        type="button" role="tab" aria-controls="nav-home-5" aria-selected="false">四川农业大学
+                </button>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-home-1" role="tabpanel" aria-labelledby="nav-home-1-tab"
+                 tabindex="0">
+                <div id="wordcloud-content-1" style="width: 100%;height: 100%;padding: 8px">
+                    <div class="card-body">
+                        <table id="datatablesSimple">
+                            <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Publish time</th>
+                                <th>School</th>
+                                <th>Opinion index</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>Title</th>
+                                <th>Publish time</th>
+                                <th>School</th>
+                                <th>Opinion index</th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            {% for thread_1 in threads_1 %}
+                                <tr>
+                                    <td><a href="{{ thread_1.link }}" target="_blank"
+                                           style="text-decoration: none">{{ thread_1.title }}</a></td>
+                                    <td>{{ thread_1.publish_time }}</td>
+                                    <td>{{ thread_1.school.name }}</td>
+                                    {% if thread_1.index.sentiment_label %}
+                                        <td>
+                                            <button class="btn btn-success" data-bs-toggle="modal"
+                                                    data-bs-target="#myModal-1-{{ loop.index }}"
+                                                    style="margin-left: 35%">正面
+                                            </button>
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            <button class="btn btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#myModal-1-{{ loop.index }}"
+                                                    style="margin-left: 35%">负面
+                                            </button>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                                <div class="modal fade" id="myModal-1-{{ loop.index }}" tabindex="-1" role="dialog"
+                                     aria-labelledby="myModalLabel-1-{{ loop.index }}">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="myModalLabel-1-{{ loop.index }}">
+                                                    查看分析</h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item list-group-item-primary">
+                                                        <strong>{{ thread_1.index.text }}</strong></li>
+
+                                                    {% if thread_1.index.sentiment_label %}
+                                                        <li class="list-group-item list-group-item-success"><strong>情感倾向：{{ thread_1.index.sentiment_key }}</strong>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="list-group-item list-group-item-danger">
+                                                            <strong>情感倾向：{{ thread_1.index.sentiment_key }}</strong>
+                                                        </li>
+                                                    {% endif %}
+
+                                                    <li class="list-group-item list-group-item-success">
+                                                        <strong>积极因素：{{ thread_1.index.positive_probs }}</strong>
+                                                    </li>
+                                                    <li class="list-group-item list-group-item-danger">
+                                                        <strong>消极因素：{{ thread_1.index.negative_probs }}</strong>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="pie-content-1" style="width: 100%;height: 600px;padding: 8px"></div>
+            </div>
+            <div class="tab-pane fade" id="nav-home-2" role="tabpanel" aria-labelledby="nav-home-2-tab" tabindex="0">
+                <div id="wordcloud-content-2" style="width: 100%;height: 100%;padding: 8px">
+                    <div class="card-body">
+                        <table id="datatablesSimple2">
+                            <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Publish time</th>
+                                <th>School</th>
+                                <th>Opinion index</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>Title</th>
+                                <th>Publish time</th>
+                                <th>School</th>
+                                <th>Opinion index</th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            {% for thread_2 in threads_2 %}
+                                <tr>
+                                    <td><a href="{{ thread_2.link }}" target="_blank"
+                                           style="text-decoration: none">{{ thread_2.title }}</a></td>
+                                    <td>{{ thread_2.publish_time }}</td>
+                                    <td>{{ thread_2.school.name }}</td>
+                                    {% if thread_2.index.sentiment_label %}
+                                        <td>
+                                            <button class="btn btn-success" data-bs-toggle="modal"
+                                                    data-bs-target="#myModal-2-{{ loop.index }}"
+                                                    style="margin-left: 35%">正面
+                                            </button>
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            <button class="btn btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#myModal-2-{{ loop.index }}"
+                                                    style="margin-left: 35%">负面
+                                            </button>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                                <div class="modal fade" id="myModal-2-{{ loop.index }}" tabindex="-1" role="dialog"
+                                     aria-labelledby="myModalLabel-2-{{ loop.index }}">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="myModalLabel-2-{{ loop.index }}">
+                                                    查看分析</h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item list-group-item-primary">
+                                                        <strong>{{ thread_2.index.text }}</strong></li>
+
+                                                    {% if thread_2.index.sentiment_label %}
+                                                        <li class="list-group-item list-group-item-success"><strong>情感倾向：{{ thread_2.index.sentiment_key }}</strong>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="list-group-item list-group-item-danger">
+                                                            <strong>情感倾向：{{ thread_2.index.sentiment_key }}</strong>
+                                                        </li>
+                                                    {% endif %}
+
+                                                    <li class="list-group-item list-group-item-success">
+                                                        <strong>积极因素：{{ thread_2.index.positive_probs }}</strong>
+                                                    </li>
+                                                    <li class="list-group-item list-group-item-danger">
+                                                        <strong>消极因素：{{ thread_2.index.negative_probs }}</strong>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="pie-content-2" style="width: 100%;height: 600px;padding: 8px"></div>
+            </div>
+            <div class="tab-pane fade" id="nav-home-3" role="tabpanel" aria-labelledby="nav-home-3-tab" tabindex="0">
+                <div id="wordcloud-content-3" style="width: 100%;height: 100%;padding: 8px">
+                    <div class="card-body">
+                        <table id="datatablesSimple3">
+                            <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Publish time</th>
+                                <th>School</th>
+                                <th>Opinion index</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>Title</th>
+                                <th>Publish time</th>
+                                <th>School</th>
+                                <th>Opinion index</th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            {% for thread_3 in threads_3 %}
+                                <tr>
+                                    <td><a href="{{ thread_3.link }}" target="_blank"
+                                           style="text-decoration: none">{{ thread_3.title }}</a></td>
+                                    <td>{{ thread_3.publish_time }}</td>
+                                    <td>{{ thread_3.school.name }}</td>
+                                    {% if thread_3.index.sentiment_label %}
+                                        <td>
+                                            <button class="btn btn-success" data-bs-toggle="modal"
+                                                    data-bs-target="#myModal-3-{{ loop.index }}"
+                                                    style="margin-left: 35%">正面
+                                            </button>
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            <button class="btn btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#myModal-3-{{ loop.index }}"
+                                                    style="margin-left: 35%">负面
+                                            </button>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                                <div class="modal fade" id="myModal-3-{{ loop.index }}" tabindex="-1" role="dialog"
+                                     aria-labelledby="myModalLabel-3-{{ loop.index }}">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="myModalLabel-3-{{ loop.index }}">
+                                                    查看分析</h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item list-group-item-primary">
+                                                        <strong>{{ thread_3.index.text }}</strong></li>
+
+                                                    {% if thread_3.index.sentiment_label %}
+                                                        <li class="list-group-item list-group-item-success"><strong>情感倾向：{{ thread_3.index.sentiment_key }}</strong>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="list-group-item list-group-item-danger">
+                                                            <strong>情感倾向：{{ thread_3.index.sentiment_key }}</strong>
+                                                        </li>
+                                                    {% endif %}
+
+                                                    <li class="list-group-item list-group-item-success">
+                                                        <strong>积极因素：{{ thread_3.index.positive_probs }}</strong>
+                                                    </li>
+                                                    <li class="list-group-item list-group-item-danger">
+                                                        <strong>消极因素：{{ thread_3.index.negative_probs }}</strong>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="pie-content-3" style="width: 100%;height: 600px;padding: 8px"></div>
+            </div>
+            <div class="tab-pane fade" id="nav-home-4" role="tabpanel" aria-labelledby="nav-home-4-tab" tabindex="0">
+                <div id="wordcloud-content-4" style="width: 100%;height: 100%;padding: 8px">
+                    <div class="card-body">
+                        <table id="datatablesSimple4">
+                            <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Publish time</th>
+                                <th>School</th>
+                                <th>Opinion index</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>Title</th>
+                                <th>Publish time</th>
+                                <th>School</th>
+                                <th>Opinion index</th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            {% for thread_4 in threads_4 %}
+                                <tr>
+                                    <td><a href="{{ thread_4.link }}" target="_blank"
+                                           style="text-decoration: none">{{ thread_4.title }}</a></td>
+                                    <td>{{ thread_4.publish_time }}</td>
+                                    <td>{{ thread_4.school.name }}</td>
+                                    {% if thread_4.index.sentiment_label %}
+                                        <td>
+                                            <button class="btn btn-success" data-bs-toggle="modal"
+                                                    data-bs-target="#myModal-4-{{ loop.index }}"
+                                                    style="margin-left: 35%">正面
+                                            </button>
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            <button class="btn btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#myModal-4-{{ loop.index }}"
+                                                    style="margin-left: 35%">负面
+                                            </button>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                                <div class="modal fade" id="myModal-4-{{ loop.index }}" tabindex="-1" role="dialog"
+                                     aria-labelledby="myModalLabel-4-{{ loop.index }}">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="myModalLabel-4-{{ loop.index }}">
+                                                    查看分析</h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item list-group-item-primary">
+                                                        <strong>{{ thread_4.index.text }}</strong></li>
+
+                                                    {% if thread_4.index.sentiment_label %}
+                                                        <li class="list-group-item list-group-item-success"><strong>情感倾向：{{ thread_4.index.sentiment_key }}</strong>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="list-group-item list-group-item-danger">
+                                                            <strong>情感倾向：{{ thread_4.index.sentiment_key }}</strong>
+                                                        </li>
+                                                    {% endif %}
+
+                                                    <li class="list-group-item list-group-item-success">
+                                                        <strong>积极因素：{{ thread_4.index.positive_probs }}</strong>
+                                                    </li>
+                                                    <li class="list-group-item list-group-item-danger">
+                                                        <strong>消极因素：{{ thread_4.index.negative_probs }}</strong>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="pie-content-4" style="width: 100%;height: 600px;padding: 8px"></div>
+            </div>
+            <div class="tab-pane fade" id="nav-home-5" role="tabpanel" aria-labelledby="nav-home-5-tab" tabindex="0">
+                <div id="wordcloud-content-5" style="width: 100%;height: 100%;padding: 8px">
+                    <div class="card-body">
+                        <table id="datatablesSimple5">
+                            <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Publish time</th>
+                                <th>School</th>
+                                <th>Opinion index</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>Title</th>
+                                <th>Publish time</th>
+                                <th>School</th>
+                                <th>Opinion index</th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            {% for thread_5 in threads_5 %}
+                                <tr>
+                                    <td><a href="{{ thread_5.link }}" target="_blank"
+                                           style="text-decoration: none">{{ thread_5.title }}</a></td>
+                                    <td>{{ thread_5.publish_time }}</td>
+                                    <td>{{ thread_5.school.name }}</td>
+                                    {% if thread_5.index.sentiment_label %}
+                                        <td>
+                                            <button class="btn btn-success" data-bs-toggle="modal"
+                                                    data-bs-target="#myModal-5-{{ loop.index }}"
+                                                    style="margin-left: 35%">正面
+                                            </button>
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            <button class="btn btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#myModal-5-{{ loop.index }}"
+                                                    style="margin-left: 35%">负面
+                                            </button>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                                <div class="modal fade" id="myModal-5-{{ loop.index }}" tabindex="-1" role="dialog"
+                                     aria-labelledby="myModalLabel-5-{{ loop.index }}">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="myModalLabel-5-{{ loop.index }}">
+                                                    查看分析</h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item list-group-item-primary">
+                                                        <strong>{{ thread_5.index.text }}</strong></li>
+
+                                                    {% if thread_5.index.sentiment_label %}
+                                                        <li class="list-group-item list-group-item-success"><strong>情感倾向：{{ thread_5.index.sentiment_key }}</strong>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="list-group-item list-group-item-danger">
+                                                            <strong>情感倾向：{{ thread_5.index.sentiment_key }}</strong>
+                                                        </li>
+                                                    {% endif %}
+
+                                                    <li class="list-group-item list-group-item-success">
+                                                        <strong>积极因素：{{ thread_5.index.positive_probs }}</strong>
+                                                    </li>
+                                                    <li class="list-group-item list-group-item-danger">
+                                                        <strong>消极因素：{{ thread_5.index.negative_probs }}</strong>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="pie-content-5" style="width: 100%;height: 600px;padding: 8px"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(  //刷新显示
+            function () {
+                const chart = echarts.init(document.getElementById('pie-content-1'), 'white', {renderer: 'canvas'});
+                $.ajax({
+                    type: "GET",
+                    url: "http://127.0.0.1:5000/opinion/pie/1",
+                    dataType: 'json',
+                    success: function (result) {
+                        chart.setOption(result);
+                    }
+                });
+            }
+        )
+        $(  //点击按钮
+            function () {
+                for (let i = 2; i <= 5; i++) {
+                    $(`#nav-home-${i}-tab`).click(function (){
+                        const chart = echarts.init(document.getElementById(`pie-content-${i}`), 'white', {renderer: 'canvas'});
+                        $.ajax({
+                            type: "GET",
+                            url: `http://127.0.0.1:5000/opinion/pie/${i}`,
+                            dataType: 'json',
+                            success: function (result) {
+                                chart.setOption(result);
+                            }
+                        });
+                    })
+                }
+            }
+        )
+    </script>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}
+    首页
+{% endblock %}
+{% block main %}
+    {% for name,message in get_flashed_messages(with_categories=True) %}
+        {#    显示登录成功alert框    #}
+        <div id="myAlert" class="alert alert-success alert-dismissible fade show" role="alert"
+             style="position: fixed;
+                    width: 20%;
+                    margin-left: 28%;
+                    margin-top: 20px;
+                    z-index: 999;">
+            <strong>{{ message }}</strong>
+            <p>{{ name }}</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+        <script>
+            window.setTimeout(function () {
+                $(".alert-success").removeClass("show");
+            }, 1500);//显示的时间
+        </script>
+    {% endfor %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            帖子列表
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Content</th>
+                    <th>Link</th>
+                    <th>Publish time</th>
+                    <th>School</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Content</th>
+                    <th>Link</th>
+                    <th>Publish time</th>
+                    <th>School</th>
+                </tr>
+                </tfoot>
+                <tbody>
+                {% for thread in threads %}
+                    <tr>
+                        <td>{{ thread.title }}</td>
+                        <td>{{ thread.author }}</td>
+                        <td>{{ thread.content }}</td>
+                        <td><a href="{{ thread.link }}">{{ thread.link }}</a></td>
+                        <td>{{ thread.publish_time }}</td>
+                        <td>{{ thread.school.name }}</td>
+                    </tr>
+                {% endfor %}
+{#                <tr>#}
+{#                    <td>1</td>#}
+{#                    <td>2</td>#}
+{#                    <td>3</td>#}
+{#                    <td>4</td>#}
+{#                    <td>5</td>#}
+{#                    <td>6</td>#}
+{##}
+{#                </tr>#}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card mb-4" id="index-pie" style="width: 100%;height: 600px;padding: 8px"></div>
+    <script>
+        $(  //刷新显示
+            function () {
+                var chart = echarts.init(document.getElementById('index-pie'), 'white', {renderer: 'canvas'});
+                $.ajax({
+                    type: "GET",
+                    url: "http://127.0.0.1:5000/pie",
+                    dataType: 'json',
+                    success: function (result) {
+                        chart.setOption(result);
+                    }
+                });
+            }
+        )
+    </script>
+{% endblock %}

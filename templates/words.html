@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}
+    关键词分析
+{% endblock %}
+{% block main %}
+    <div class="card mb-4">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <button class="nav-link active" id="nav-home-1-tab" data-bs-toggle="tab" data-bs-target="#nav-home-1"
+                        type="button" role="tab" aria-controls="nav-home-1" aria-selected="true">成都理工大学
+                </button>
+                <button class="nav-link" id="nav-home-2-tab" data-bs-toggle="tab" data-bs-target="#nav-home-2"
+                        type="button" role="tab" aria-controls="nav-home-2" aria-selected="false">电子科技大学
+                </button>
+                <button class="nav-link" id="nav-home-3-tab" data-bs-toggle="tab" data-bs-target="#nav-home-3"
+                        type="button" role="tab" aria-controls="nav-home-3" aria-selected="false">四川大学
+                </button>
+                <button class="nav-link" id="nav-home-4-tab" data-bs-toggle="tab" data-bs-target="#nav-home-4"
+                        type="button" role="tab" aria-controls="nav-home-4" aria-selected="false">西南石油大学
+                </button>
+                <button class="nav-link" id="nav-home-5-tab" data-bs-toggle="tab" data-bs-target="#nav-home-5"
+                        type="button" role="tab" aria-controls="nav-home-5" aria-selected="false">四川农业大学
+                </button>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-home-1" role="tabpanel" aria-labelledby="nav-home-1-tab"
+                 tabindex="0">
+                <div id="tf-pie-content-1" style="width: 100%;height: 600px;padding: 8px;"></div>
+                <div id="tr-pie-content-1" style="width: 100%;height: 600px;padding: 8px;"></div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-home-2" role="tabpanel" aria-labelledby="nav-home-2-tab" tabindex="0">
+                <div id="tf-pie-content-2" style="width: 100%;height: 600px;padding: 8px"></div>
+                <div id="tr-pie-content-2" style="width: 100%;height: 600px;padding: 8px"></div>
+            </div>
+            <div class="tab-pane fade" id="nav-home-3" role="tabpanel" aria-labelledby="nav-home-3-tab" tabindex="0">
+                <div id="tf-pie-content-3" style="width: 100%;height: 600px;padding: 8px"></div>
+                <div id="tr-pie-content-3" style="width: 100%;height: 600px;padding: 8px"></div>
+            </div>
+            <div class="tab-pane fade" id="nav-home-4" role="tabpanel" aria-labelledby="nav-home-4-tab" tabindex="0">
+                <div id="tf-pie-content-4" style="width: 100%;height: 600px;padding: 8px"></div>
+                <div id="tr-pie-content-4" style="width: 100%;height: 600px;padding: 8px"></div>
+            </div>
+            <div class="tab-pane fade" id="nav-home-5" role="tabpanel" aria-labelledby="nav-home-5-tab" tabindex="0">
+                <div id="tf-pie-content-5" style="width: 100%;height: 600px;padding: 8px"></div>
+                <div id="tr-pie-content-5" style="width: 100%;height: 600px;padding: 8px"></div>
+            </div>
+        </div>
+    </div>
+    {#  由于echarts版本兼容问题，这一页必须单独引入js  #}
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
+    <script>
+        $(  //刷新显示
+            function () {
+                var chart = echarts.init(document.getElementById('tf-pie-content-1'), 'white', {renderer: 'canvas'});
+                $.ajax({
+                    type: "GET",
+                    url: "http://127.0.0.1:5000/words/tfpie/1",
+                    dataType: 'json',
+                    success: function (result) {
+                        chart.setOption(result);
+                    }
+                });
+            }
+        )
+        $(  //点击按钮
+            function () {
+                for (let i = 2; i <= 5; i++) {
+                    $(`#nav-home-${i}-tab`).click(function () {
+                        var chart = echarts.init(document.getElementById(`tf-pie-content-${i}`), 'white', {renderer: 'canvas'});
+                        $.ajax({
+                            type: "GET",
+                            url: `http://127.0.0.1:5000/words/tfpie/${i}`,
+                            dataType: 'json',
+                            success: function (result) {
+                                chart.setOption(result);
+                            }
+                        });
+                    })
+                }
+            }
+        )
+        $(  //刷新显示
+            function () {
+                const chart = echarts.init(document.getElementById('tr-pie-content-1'), 'white', {renderer: 'canvas'});
+                $.ajax({
+                    type: "GET",
+                    url: "http://127.0.0.1:5000/words/trpie/1",
+                    dataType: 'json',
+                    success: function (result) {
+                        chart.setOption(result);
+                    }
+                });
+            }
+        )
+        $(  //点击按钮
+            function () {
+                for (let i = 2; i <= 5; i++) {
+                    $(`#nav-home-${i}-tab`).click(function (){
+                        const chart = echarts.init(document.getElementById(`tr-pie-content-${i}`), 'white', {renderer: 'canvas'});
+                        $.ajax({
+                            type: "GET",
+                            url: `http://127.0.0.1:5000/words/trpie/${i}`,
+                            dataType: 'json',
+                            success: function (result) {
+                                chart.setOption(result);
+                            }
+                        });
+                    })
+                }
+            }
+        )
+    </script>
+{% endblock %}

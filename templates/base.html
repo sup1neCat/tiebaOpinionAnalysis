@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>{% block title %}{% endblock %}- 高校贴吧舆情分析系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet"/>
+    <link href="../static/dist/css/styles.css" rel="stylesheet"/>
+    <link rel="icon" href="../static/img/icon.svg" type="image/x-icon">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+{#    <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>#}
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.2/echarts.min.js"></script>
+    <script type="text/javascript" src="../static/dist/js/echarts-wordcloud.min.js"></script>
+
+</head>
+<body class="sb-nav-fixed">
+{#导航栏#}
+<nav class="sb-topnav navbar navbar-expand navbar-light bg-light">
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3" href="{{ url_for('index.index') }}">
+        <svg style="height: 100px;width: 50px" t="1681895292805" class="icon" viewBox="0 0 1024 1024" version="1.1"
+             xmlns="http://www.w3.org/2000/svg"
+             p-id="3602" width="200" height="200">
+            <path d="M222.059497 183.140732m192.574849-23.645218l220.979639-27.132888q192.574849-23.645218 216.220068 168.929631l29.661613 241.574449q23.645218 192.574849-168.929631 216.220068l-220.97964 27.132888q-192.574849 23.645218-216.220067-168.929631l-29.661613-241.57445q-23.645218-192.574849 168.929631-216.220067Z"
+                  fill="#FC607E" p-id="3603"></path>
+            <path d="M421.123518 175.640181a194.021053 194.021053 0 0 1 1.310105 0.056337l222.800425 8.481202a194.021053 194.021053 0 0 1 186.484851 200.056192l-7.642653 242.896869a194.021053 194.021053 0 0 1-201.362573 187.785544l-41.415643-1.647934-50.091415 65.228284a7.168 7.168 0 0 1-0.616591 0.727301l-0.683221 0.626884a7.168 7.168 0 0 1-10.050999-1.372267l-53.667761-69.592594-66.281362-2.50437A194.021053 194.021053 0 0 1 213.368336 606.332006l7.74964-242.910005A194.021053 194.021053 0 0 1 421.123518 175.640181z"
+                  fill="#58B6FD" p-id="3604"></path>
+            <path d="M421.187368 175.696842h1.239579l222.800842 8.515369a194.021053 194.021053 0 0 1 186.47579 200.003368l-7.653053 242.957474a193.104842 193.104842 0 0 1-35.570526 106.010947 194.775579 194.775579 0 0 1-75.883789 25.869474l-220.968422 27.162947a194.021053 194.021053 0 0 1-216.225684-168.96l-29.642105-241.55621a193.805474 193.805474 0 0 1 64.512-169.445053c31.905684-20.48 70.117053-31.905684 110.915368-30.612211z"
+                  fill="#4835B1" p-id="3605"></path>
+            <path d="M619.250526 277.719579a4.311579 4.311579 0 0 1 4.688842-4.688842h39.882106c2.425263-0.161684 4.527158 2.155789 4.311579 4.634947v31.797895h101.645473c2.640842-0.269474 4.904421 2.155789 4.581053 4.850526v40.04379c0.053895 1.455158-0.215579 3.018105-1.347368 3.98821-1.616842 1.562947-3.934316 1.077895-5.928422 1.185684h-98.950736V466.728421h100.24421c2.694737-0.323368 4.904421 2.209684 4.581053 4.850526v183.781053a50.607158 50.607158 0 0 1-9.054316 29.049263 49.044211 49.044211 0 0 1-28.564211 19.671579c-6.736842 1.724632-13.689263 1.293474-20.587789 1.347369h-132.527158c-1.401263 0-2.910316-0.269474-3.826526-1.401264-1.616842-1.832421-1.024-4.473263-1.13179-6.736842V474.327579c0.107789-2.048-0.431158-4.473263 1.077895-6.144 0.916211-1.239579 2.479158-1.509053 3.934316-1.455158h36.917895V277.719579m7.006315 377.640421h97.872842V516.742737H626.256842c-0.161684 46.187789 0 92.375579-0.053895 138.617263zM353.441684 293.025684a48.505263 48.505263 0 0 1 38.049684-19.240421h149.773474a4.203789 4.203789 0 0 1 4.419369 3.395369c0.269474 1.940211 0.107789 3.988211 0.161684 5.928421v307.146105c0.377263 2.694737-1.940211 5.389474-4.634948 5.12h-39.774315a4.311579 4.311579 0 0 1-4.527158-4.419369V323.745684H392.030316v261.712842c-0.053895 2.155789 0.107789 4.311579-0.161684 6.467369a4.257684 4.257684 0 0 1-4.365474 3.449263h-39.882105a4.311579 4.311579 0 0 1-4.527158-4.419369V324.446316a50.714947 50.714947 0 0 1 10.24-31.474527z"
+                  fill="#FFFFFF" p-id="3606"></path>
+            <path d="M420.001684 357.052632c-0.269474-2.586947 2.048-4.958316 4.581053-4.688843h39.774316A4.203789 4.203789 0 0 1 468.884211 355.705263c0.215579 2.048 0.107789 4.096 0.107789 6.090105v192.458106c0.053895 10.024421-0.377263 20.048842 1.293474 29.965473 3.125895 20.48 13.042526 40.043789 28.887579 53.194106 12.449684 10.509474 28.079158 16.707368 44.085894 18.593684 2.155789-0.161684 2.694737 2.317474 2.640842 3.98821v40.04379c0.107789 1.778526-0.323368 3.772632-1.832421 4.850526-1.832421 1.832421-4.527158 0.916211-6.790736 0.700632a126.976 126.976 0 0 1-64.943158-27.917474 146.593684 146.593684 0 0 1-27.701895-30.342737c-0.538947 0.323368-0.862316 0.916211-1.239579 1.401263a136.084211 136.084211 0 0 1-56.912842 47.481264c-12.072421 5.281684-24.953263 8.623158-38.049684 9.862736-2.694737 0.538947-5.281684-1.886316-5.22779-4.634947-0.107789-13.797053 0-27.594105 0-41.391158a5.820632 5.820632 0 0 1 1.347369-4.096c20.641684-2.694737 40.097684-13.527579 53.786947-29.58821 13.689263-15.791158 21.557895-36.702316 21.719579-57.829053V357.052632z"
+                  fill="#FFFFFF" p-id="3607"></path>
+        </svg>
+        舆情分析系统
+    </a>
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+            class="fas fa-bars"></i></button>
+    <!-- Navbar Search-->
+    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+{#        <div class="input-group">#}
+{#            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."#}
+{#                   aria-describedby="btnNavbarSearch"/>#}
+{#            <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>#}
+{#        </div>#}
+    </form>
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                {% if user %}
+                    <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">注销</a></li>
+                {% else %}
+                    <li><a class="dropdown-item" href="{{ url_for('auth.login') }}">登录</a></li>
+                    <li>
+                        <hr class="dropdown-divider"/>
+                    </li>
+                    <li><a class="dropdown-item" href="{{ url_for('auth.register') }}">注册</a></li>
+                {% endif %}
+            </ul>
+        </li>
+    </ul>
+</nav>
+{#侧边栏#}
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-light" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">Core</div>
+                    <a class="nav-link" href="{{ url_for('index.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
+                        主页
+                    </a>
+                    <a class="nav-link" href="{{ url_for('words.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-atom"></i></div>
+                        关键词分析
+                    </a>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
+                       aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class='fas fa-area-chart'></i></div>
+                        数据分析
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{{ url_for('data.publish_time') }}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-clock"></i></div>
+                                发布时间分析
+                            </a>
+                            <a class="nav-link" href="{{ url_for('data.comments') }}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-comment-alt"></i></div>
+                                话题分析
+                            </a>
+                        </nav>
+                    </div>
+                    <a class="nav-link" href="{{ url_for('wordcloud.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-cloud-download"></i></div>
+                        词云分析
+                    </a>
+                    <a class="nav-link" href="{{ url_for('opinion.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                        舆情分析
+                    </a>
+                    <div class="sb-sidenav-menu-heading">Setting</div>
+                    <a class="nav-link" href="{{ url_for('settings') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-gear"></i></div>
+                        设置
+                    </a>
+                </div>
+            </div>
+            {% if user %}
+                <div class="sb-sidenav-footer">
+                    <div class="small">Logged in as:</div>
+                    {{ user.username }}
+                </div>
+            {% endif %}
+        </nav>
+    </div>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                {% block main %}{% endblock %}
+            </div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; SupineCat</div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="../static/dist/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="/static/dist/js/simple-datatable.js"></script>
+<script src="../static/dist/js/datatables-simple-demo.js"></script>
+</body>
+</html>

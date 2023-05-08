@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}
+    设置
+{% endblock %}
+{% block main %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                    <div class="card-header"><h3 class="text-center font-weight-light my-4">修改密码</h3></div>
+                    <div class="card-body">
+                        <div class="small mb-3 text-muted">修改您的密码</div>
+                        <form method="post">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="password" id="inputPassword" type="password"
+                                       placeholder="请输入密码"/>
+                                <label for="inputPassword">新密码</label>
+                                {% for tip in form.password.errors %}
+                                    <span style="color:red">{{ tip }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input class="form-control" name="password_confirm" id="inputConfirmPassword" type="password"
+                                       placeholder="确认密码"/>
+                                <label for="inputConfirmPassword">确认密码</label>
+                                {% for tip in form.password_confirm.errors %}
+                                    <span style="color:red">{{ tip }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                <div></div><!--占位置-->
+                                <button class="btn btn-primary">重置密码</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center py-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

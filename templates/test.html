@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../static/dist/css/styles.css" rel="stylesheet"/>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Publish Date</th>
+        <th>Publisher</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><a href="#" data-bs-toggle="modal" data-bs-target="#myModal">Title 1</a></td>
+        <td>2022-01-01</td>
+        <td>John Doe</td>
+    </tr>
+    <tr>
+        <td><a href="#" data-toggle="modal" data-target="#myModal">Title 2</a></td>
+        <td>2022-01-02</td>
+        <td>Jane Smith</td>
+    </tr>
+    </tbody>
+</table>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Title 1</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                This is the text that will be displayed in the modal.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-toggle="collapse"
+                        data-bs-target="#collapseExample">Show
+                </button>
+            </div>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                    Some placeholder content for the collapse component. This panel is hidden by default but revealed
+                    when the user activates the relevant trigger.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
